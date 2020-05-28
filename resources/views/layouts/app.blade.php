@@ -22,7 +22,6 @@
     <style>
          #profile_image{
             height: 150px;
-            width: 150px;
             float: left;
             border-radius: 50%;
             margin-right: 25px;
@@ -33,8 +32,7 @@
         }
 
         #nav_image{
-            height: 32px;
-            width: 32px;
+            height: 32px;           
             top: 10px;
             border-radius: 50%;
         }
@@ -43,7 +41,7 @@
             position: relative;
             padding-left: 50px;
         }
-        
+          
     </style>
 </head>
 <body>
@@ -67,17 +65,14 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.showLoginForm') }}">{{ __('Admin') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('sign-up.create') }}">{{ __('Sign Up') }}</a>
                             <li>

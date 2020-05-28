@@ -10,16 +10,16 @@ class Category extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'user_id'
+        'name', 'description', 'user_id',
     ];
 
-    public function user() 
+    public function posts()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(Post::class);
     }
 
-    public function posts() 
+    public function user()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -44,5 +44,18 @@ Route::middleware('auth')->group( function () {
     Route::middleware('role:admin')->group( function () {
 
         Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
+
+        Route::resource('post', 'PostController')->except([
+            'create'
+        ]);
+
+        Route::resource('category', 'CategoryController')->except([
+            'create'
+        ]);
+
+        Route::resource('comment', 'CommentController');
+
+        Route::post('ckeditor/image_upload', 'CKEditorController@upload')->name('upload');
+
     });
 });
