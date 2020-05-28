@@ -67,11 +67,17 @@ class ProfileController extends Controller
 
         Auth::logout();
 
-        if($user->delete())
-        {
+        try {
+            $user->delete();
+            
             session()->flash('success', 'Your account has been deleted');
 
             return redirect()->route('login');
+
+        } catch (Exception $exception) {
+            Session::flash('error', 'An error occured and your profile was not deleted.');
+        } catch (Error $error) {
+            Session::flash('error', 'An error occured and your profile was not deleted.');
         }
 
         return redirect()->back();
@@ -80,7 +86,9 @@ class ProfileController extends Controller
 
     public function update_avatar(Request $request)
     {
-        if($request->hasFile('avatar')){
+        $attempt = boolval($request->hasFile('avatar'));
+
+        if( $attempt ){
             $avatar = $request->file('avatar');
             $filename = time() . "." . $avatar->getClientOriginalExtension();
             Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/' . $filename ) );

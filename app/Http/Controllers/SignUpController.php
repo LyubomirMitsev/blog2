@@ -29,7 +29,7 @@ class SignUpController extends Controller
      */
     public function store(SignUpRequest $request)
     {
-        $user = UnregisteredUser::create( $request->only(['email']) );
+        $user = boolval(UnregisteredUser::create( $request->only(['email']) ));
 
         if( $user )
         {
@@ -37,16 +37,5 @@ class SignUpController extends Controller
         }
 
         return redirect()->route('sign-up.create');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

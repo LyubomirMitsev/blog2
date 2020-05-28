@@ -4,7 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10 col-md-offset-1">
-                <img src="/uploads/avatars/{{ $user->avatar }}" id="profile_image">
+                <span id="avatar">
+                    <img src="/uploads/avatars/{{ $user->avatar }}" id="profile_image">
+                </span>
                 <h2>{{ $user->name }}</h2>
                 <h5>{{ $user->email }}</h5>
                 <form enctype="multipart/form-data" action="{{ route('profile.avatar') }}" method="POST">

@@ -207,6 +207,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.navbar -->
 
   @include('modals.deleteProfileModal')
+  @include('modals.deletePostOrCategoryModal')
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -226,7 +227,66 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
-        
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <p>
+                Categories
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="#" id="index_category" class="nav-link">
+                  <p>All Categories</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link" id="new_category">
+                  <p>New Category</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <p>
+                Posts
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link" id="index_post">
+                  <p>All Posts</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" id="new_post">
+                  <p>New Post</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <p>
+                Comments
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link" id="index_comment">
+                  <p>Unapproved Comments</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          
+        </ul>
       </nav>
       <!-- /.sidebar-menu -->
     </div>
@@ -279,6 +339,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </body>
 
 <!-- Scripts -->
+
+@include('jquery.manageAdminFunctions')
+@include('jquery.adminDashboardPostJS')
 
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/admin-lte/adminlte.min.js') }}"></script>
