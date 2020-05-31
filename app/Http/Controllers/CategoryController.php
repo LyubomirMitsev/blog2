@@ -44,15 +44,22 @@ class CategoryController extends Controller
         $attributes = $request->only(['name', 'description']);
         $attributes['user_id'] = Auth::user()->id;
 
+        $response = [
+            'status' => 'success', 
+            'message' => 'The new category was successfully created!'
+        ];
+
         try {
             Category::create($attributes);
-            Session::flash('success', 'The new category was successfully created!');
+            
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and the category could nut be created!');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and the category could nut be created!');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         }
 
+        Session::flash($response['status'], $response['message']);
         return redirect()->route('admin.dashboard');
     }
 
@@ -92,9 +99,7 @@ class CategoryController extends Controller
             Session::flash('success', 'The requested category has successfully been updated!');
         } catch (Exception $exception) {
             Session::flash('error', 'An error occured and we could not update the requested category!');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and we could not update the requested category!');
-        }
+        } 
 
         return redirect()->route('admin.dashboard');
     }
@@ -107,7 +112,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if ($category->posts->count() != 0) {
+        $postCount = $category->posts->count();
+
+        if ($postCount > 0) {
             Session::flash('error', 'The requested for deletion category has active posts in it. Make sure you remove all active posts from the category before you try to delete it.');
         } else {
             try {
@@ -115,9 +122,7 @@ class CategoryController extends Controller
                 Session::flash('success', 'The requested category has successfully been deleted.');
             } catch (Exception $exception) {
                 Session::flash('error', 'An error occured and we could not delete the requested category!');
-            } catch (Error $error) {
-                Session::flash('error', 'An error occured and we could not delete the requested category!');
-            }
+            } 
         }
 
         return redirect()->route('admin.dashboard');

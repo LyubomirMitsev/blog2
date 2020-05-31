@@ -72,9 +72,7 @@ class PostController extends Controller
             Session::flash('success', 'Post saved successfully!');
         } catch (Exception $exception) {
             Session::flash('error', 'An error occured and the post could not be created.');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and the post could not be created.');
-        }
+        } 
 
         return redirect()->route('admin.dashboard');
     }
@@ -87,7 +85,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('post.show', ['post' => $post]);
+        $comments = Comment::orderBy('created_at', 'desc')
+                            ->take(30)
+                            ->get();
+
+        return view('post.show', ['post' => $post, 'comments' => $comments]);
     }
 
     /**
@@ -128,9 +130,7 @@ class PostController extends Controller
             Session::flash('success', 'The requested post has successfully been updated.');
         } catch (Exception $exception) {
             Session::flash('error', 'An error occured and we could not update the requested post!');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and we could not update the requested post!');
-        }
+        } 
 
         return redirect()->route('admin.dashboard');
     }
@@ -148,9 +148,7 @@ class PostController extends Controller
             Session::flash('success', 'The requested post has been successfully deleted.');
         } catch (Exception $exception) {
             Session::flash('error', 'An error occured and we could not delete the requested post!');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and we could not delete the requested post!');
-        }
+        } 
 
         return redirect()->route('admin.dashboard');
     }

@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     <style>
          #profile_image{
@@ -41,16 +42,34 @@
             position: relative;
             padding-left: 50px;
         }
+
+        #navbarDropdown{
+            font-size: 120%;
+        }
+
+        .hidden{
+            display: none;
+        }
           
+        .author-image{
+            width: 50px;
+            height: 50px;
+            float: left;
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand" href="{{ route('welcome') }}">
+                    Home
                 </a>
+                @role('admin')
+                    <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
+                        Dashboard
+                    </a>
+                @endrole
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

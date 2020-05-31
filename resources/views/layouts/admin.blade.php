@@ -208,6 +208,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   @include('modals.deleteProfileModal')
   @include('modals.deletePostOrCategoryModal')
+  @include('modals.approveCommentModal')
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -217,11 +218,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="/uploads/avatars/{{ Auth::user()->avatar }}" class="img-circle elevation-2" alt="User Image" id="profile_image">
-        </div>
         <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <a href="{{ route('welcome') }}" class="d-block">Home Page</a>
         </div>
       </div>
 

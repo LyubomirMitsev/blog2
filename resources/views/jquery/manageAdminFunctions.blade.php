@@ -67,26 +67,6 @@
                     $('a[number="' + prev + '"]').click();
                 });
 
-                $('#approveBtn').on('click', function (e) {
-                    e.preventDefault();
-                    $('#approveCommentModal').modal('hide');
-
-                    $.ajax({
-                        data: {
-                            _token: "{{ csrf_token() }}"
-                        },
-                        url: $('#approveCommentForm').attr('action'),
-                        type: "PATCH",
-                        dataType: "html",
-                        success: function (data) {
-                            start = 0;
-                            managePostsCategoriesComments.show_all_comments();
-
-                            $('div.flash-message').html(data);
-                        }
-                    })
-                });
-
             },
 
             show_all: function () {
@@ -367,7 +347,6 @@
                     $('#post_name').val(data.title);
                     $('#checkbox-list').attr('hidden', true);
                     $('.checkbox-list-button').attr('area-expanded', false);
-                    $('.checkbox-list-button').click();
 
                     if(data.published_at){
                         $('select[name="status"] option[value="publish"]').prop('selected', true);
@@ -453,7 +432,7 @@
                                 month++;
                                 updated = updated.getDate() + '-' + month + '-' + updated.getFullYear()  + " " + updated.getHours() + ":" + updated.getMinutes() + ":" + updated.getSeconds();
 
-                            var url = "{{ route('post.show', ':slug') }}"
+                            var url = "{{ route('post.view', ':slug') }}"
                             url = url.replace(':slug', posts[i]['slug']);
 
                             if(posts[i]['published_at']) {
@@ -562,12 +541,13 @@
                                 month++;
                                 created = created.getDate() + '-' + month + '-' + created.getFullYear() + " " + created.getHours() + ":" + created.getMinutes() + ":" + created.getSeconds();
 
-                            var url = "{{ route('post.show', ':id') }}"
-                            url = url.replace(':id', comments[i]['post_id']);
+                            var url = "{{ route('post.view', ':slug') }}"
+                            url = url.replace(':slug', comments[i].post_slug);
+                            url = url + "#comment-" + comments[i].id;
 
-                            var description = comments[i]['description'].substr(0, 100);
+                            var description = comments[i]['content'].substr(0, 100);
 
-                            if(comments[i]['description'].length > 100)
+                            if(comments[i]['content'].length > 100)
                             {
                                 description = description + "...";
                             }
@@ -694,7 +674,7 @@
                         $('img#image').attr('src', "/uploads/avatars/" + comment['avatar']);
                         $('#commenter').html(comment['author']);
                         $('#commenter_email').html(comment['email']);
-                        $('#comment_content').html(comment['description']);
+                        $('#comment_content').html(comment['content']);
                         $('#hideComment').on('click', managePostsCategoriesComments.show_all_comments);
                     });
             }

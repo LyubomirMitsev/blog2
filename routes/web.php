@@ -13,9 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'BlogPublicController@welcomePage')->name('welcome');
+
+Route::get('/contact', 'BlogPublicController@contactPage')->name('contact');
+
+Route::post('/contact', 'BlogPublicController@postContact')->name('contact.send');
+
+Route::get('/rules', 'BlogPublicController@rulesPage')->name('rules');
+
+Route::get('/posts', 'BlogPublicController@searchPostByTitle')->name('post.search');
+
+Route::get('/posts/{post}', 'BlogPublicController@viewPost')->name('post.view');
+
+Route::get('/posts/category/{category}', 'BlogPublicController@viewPostsFromCategory')->name('post.from.category');
 
 Route::middleware('guest')->group( function () {
 
@@ -40,6 +50,7 @@ Route::middleware('auth')->group( function () {
         'show', 'edit' , 'update' , 'destroy'
     ]);
 
+    Route::post('/comment', 'CommentController@store')->name('comment.store');
 
     Route::middleware('role:admin')->group( function () {
 
@@ -53,7 +64,9 @@ Route::middleware('auth')->group( function () {
             'create'
         ]);
 
-        Route::resource('comment', 'CommentController');
+        Route::resource('comment', 'CommentController')->except([
+            'create', 'store'
+        ]);
 
         Route::post('ckeditor/image_upload', 'CKEditorController@upload')->name('upload');
 

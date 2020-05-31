@@ -26,6 +26,14 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserSignUpEvent' => [
             'App\Listeners\SetUnregisteredUserRoleListener',
         ],
+
+        'App\Events\CommentCreatedEvent' => [
+            'App\Listeners\SendCommentNotificationEmailListener',
+        ],
+
+        'App\Events\PostSavedEvent' => [
+            'App\Listeners\SendPostPublishedEmailListener',
+        ],
     ];
 
     /**

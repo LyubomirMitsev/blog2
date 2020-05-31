@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class UpdatePostRequest extends FormRequest
+class SearchPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return true;
     }
 
     /**
@@ -25,9 +24,7 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:5|unique:posts,title,' . $this->post->id,
-            'categories' => 'required',
-            'content' => 'required',
+            'search' => 'required|string|max:30',
         ];
     }
 }
