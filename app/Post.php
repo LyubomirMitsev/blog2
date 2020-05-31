@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Events\PostSavedEvent;
 
 class Post extends Model
 {
@@ -11,6 +12,15 @@ class Post extends Model
 
     protected $fillable = [
         'title', 'content', 'user_id', 'slug', 'published_at'
+    ];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'saved' => PostSavedEvent::class,
     ];
 
     public function user()
