@@ -85,7 +85,7 @@ class CommentController extends Controller
 
         Session::flash('success', 'The comment has been successfully approved so now all end-users may see it on the post.');
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->back();
     }
 
     /**
@@ -102,6 +102,6 @@ class CommentController extends Controller
 
         Session::flash('success', 'The requested comment has been successfully deleted.');
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->back();
     }
 }

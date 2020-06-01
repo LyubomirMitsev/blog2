@@ -119,14 +119,11 @@ class BlogPublicController extends Controller
     {
         $search = $request['search'];
         
-        $posts = Post::where([
-                        ['published_at', '!=', null],
-                        ['title', 'LIKE', '%' . $search . '%']
-                    ])
-                    ->orWhere([
-                        ['published_at', '!=', null],
-                        ['content', 'LIKE', '%' . $search . '%']
-                    ])
+        $posts = Post::where(function($q) {
+                        $q->where('title', 'LIKE', '%' . $search . '%');
+                        $q->orWhere('content', 'LIKE', '%' . $search . '%');
+                    })
+                    ->whereNotNull('published_at')
                     ->orderBy('published_at', 'desc')
                     ->get();
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\SetAvatarRequest;
 
 use Image;
 
@@ -84,7 +85,7 @@ class ProfileController extends Controller
     }
 
 
-    public function update_avatar(Request $request)
+    public function update_avatar(SetAvatarRequest $request)
     {
         $attempt = boolval($request->hasFile('avatar'));
 

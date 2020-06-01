@@ -94,10 +94,8 @@
                             <input tupe="text" name="title" id="post_name" required>
 
                             <label for="categories">Categories:</label>
-                            <button type="button" aria-expanded="false" class="checkbox-list-button">Select here:<span aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="components-panel__arrow" role="img"><path d="M7.41,8.59L12,13.17l4.59-4.58L18,10l-6,6l-6-6L7.41,8.59z"></path></svg></span></button>
-                                <div id="checkbox-list" hidden="hidden">
-
-                                </div>
+                            <div id="checkbox-list">
+                            </div>
                             <div>
                                 <label for="status">Status:</label>
                                 <select name="status">
@@ -112,23 +110,6 @@
                             <button class="btn btn-primary cancelPostBtn">Cancel</button>
                             <button type="submit" class="btn btn-primary" id="submitPost"></button>
                         </form>
-                    </div>
-
-                    <div id="view_comment">
-                        <div class="author-info">
-                            <img src="" class="author-image" id="image">
-                            <div class="author-name">
-                                <h4 id="commenter"></h4>
-                                <h5 id="commenter_email"></h5>
-                            </div>
-                        </div>
-                        <br>
-                        <br>
-                        <h5>Content:</h5>
-                        <div class="comment-content" id="comment_content">
-                            
-                        </div>
-                        <button id="hideComment" class="btn btn-primary">Hide</button>
                     </div>
 
             </div>

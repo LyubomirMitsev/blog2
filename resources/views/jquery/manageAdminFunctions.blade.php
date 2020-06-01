@@ -23,8 +23,6 @@
 
             comment_tbody: $('#comment_tbody'),
 
-            view_comment: $('#view_comment'),
-
             init: function() {
 
                 $('#index_category')
@@ -76,7 +74,6 @@
                     post_form = cc.post_form,
                     post_table = cc.post_table,
                     comment_table = cc.comment_table,
-                    view_comment = cc.view_comment,
                     category_table = cc.category_table;
 
                     if( category_form.is(':visible') ) {
@@ -97,11 +94,6 @@
                     if( comment_table.is(':visible') ) {
 
                         comment_table.hide();
-                    }
-
-                    if( view_comment.is(':visible') ) {
-
-                        view_comment.hide();
                     }
 
                 $.get("{{ route('category.index') }}", function (data) {
@@ -174,7 +166,6 @@
                     post_form = cc.post_form,
                     post_table = cc.post_table,
                     comment_table = cc.comment_table,
-                    view_comment = cc.view_comment,
                     page = $('a.checked').attr('id');
                     
                 start = (page - 1) * elements_per_page;
@@ -202,11 +193,6 @@
                 if( comment_table.is(':visible') ) {
                         
                     comment_table.hide();
-                }
-
-                if( view_comment.is(':visible') ) {
-
-                    view_comment.hide();
                 }
 
                 $.get("{{ route('category.index') }}", function () {
@@ -236,7 +222,6 @@
                     post_form = cc.post_form,
                     post_table = cc.post_table,
                     comment_table = cc.comment_table,
-                    view_comment = cc.view_comment,
                     page = $('a.checked').attr('id');
                     
                 start = (page - 1) * elements_per_page;
@@ -266,11 +251,6 @@
                     comment_table.hide();
                 }
 
-                if( view_comment.is(':visible') ) {
-
-                    view_comment.hide();
-                }
-
                 $.get("{{ route('post.index') }}", function () {
                     post_form.show();
                     $('#dashboard_header').html('Create New Post');
@@ -279,8 +259,18 @@
                     $('#post_id').val(null);
                     $('#post_name').val(null);
                     $('#checkbox-list').empty();
-                    $('#checkbox-list').attr('hidden', true);
-                    $('.checkbox-list-button').attr('area-expanded', false);
+
+                        $.get("{{ route('category.index') }}", function (data1) {
+                            var length = data1.length;
+
+                            for(var i = 0; i < length; i++) {
+
+                                var current_checkbox = $('<div><input type="checkbox" value="' + data1[i]['id'] + '" name="categories[]"><label>' + data1[i]['name'] + '</label></div>');
+                                
+                                $('#checkbox-list').append(current_checkbox);
+                            }
+
+                        });
                     $('select[name="status"] option[value="draft"]').prop('selected', true);
                     CKEDITOR.instances['summary-ckeditor'].setData(null);
                     $('#submitPost').html('Save');
@@ -345,8 +335,31 @@
                     $('#post_id').val(data.id);
                     $('#dashboard_header').html('Edit Post');
                     $('#post_name').val(data.title);
-                    $('#checkbox-list').attr('hidden', true);
-                    $('.checkbox-list-button').attr('area-expanded', false);
+                    $('#checkbox-list').empty();
+
+                        var postId = $('#post_id').val();
+                        
+                        $.get("{{ route('post.index') }}" + '/' + postId + "/edit", function(data) {
+                                var categories = data['categories'];
+
+                                $.get("{{ route('category.index') }}", function (data1) {
+                                    var length = data1.length;
+
+                                    for(var i = 0; i < length; i++) {
+
+                                        var current_checkbox = $('<div><input type="checkbox" value="' + data1[i]['id'] + '" name="categories[]"><label>' + data1[i]['name'] + '</label></div>');
+                                        
+                                        $('#checkbox-list').append(current_checkbox);
+
+                                        for(var j = 0; j < categories.length; j++) {
+                                            if( $('input[type="checkbox"]').last().val() == categories[j]['id']) {
+                                                $('input[type="checkbox"]').last().click();
+                                            }
+                                        }
+                                    }
+
+                                });
+                        });
 
                     if(data.published_at){
                         $('select[name="status"] option[value="publish"]').prop('selected', true);
@@ -371,7 +384,6 @@
                     post_table = cc.post_table,
                     post_tbody = cc.post_tbody,
                     comment_table = cc.comment_table,
-                    view_comment = cc.view_comment,
                     category_table = cc.category_table;
 
                     if( category_form.is(':visible') ) {
@@ -392,11 +404,6 @@
                     if( comment_table.is(':visible') ) {
                         
                         comment_table.hide();
-                    }
-
-                    if( view_comment.is(':visible') ) {
-
-                        view_comment.hide();
                     }
 
                 $.get("{{ route('post.index') }}", function (posts) {
@@ -432,8 +439,10 @@
                                 month++;
                                 updated = updated.getDate() + '-' + month + '-' + updated.getFullYear()  + " " + updated.getHours() + ":" + updated.getMinutes() + ":" + updated.getSeconds();
 
-                            var url = "{{ route('post.view', ':slug') }}"
+                            var url = "{{ route('post.show', ':slug') }}"
+                            var comments_url = "{{ route('post.show', ':slug') }}#comments"
                             url = url.replace(':slug', posts[i]['slug']);
+                            comments_url = comments_url.replace(':slug', posts[i]['slug']);
 
                             if(posts[i]['published_at']) {
 
@@ -447,7 +456,7 @@
                                 var published = "In Draft";
                             }
 
-                            var current_row = $('<tr><td><a href = "' + url + '">' + posts[i]['title'] + '</a></td><td>' + posts[i]['author'] + '</td><td>' + posts[i]['categories'].length + '</td><td>' + posts[i]['comments'].length + '</td><td>' + created + '</td><td>' + updated + '</td><td>' + published + '</td><td class="actions"></td></tr>');
+                            var current_row = $('<tr><td><a href = "' + url + '">' + posts[i]['title'] + '</a></td><td>' + posts[i]['author'] + '</td><td>' + posts[i]['categories'].length + '</td><td><a href="' + comments_url + '">' + posts[i]['comments'].length + '</a></td><td>' + created + '</td><td>' + updated + '</td><td>' + published + '</td><td class="actions"></td></tr>');
                             post_tbody.append(current_row);
 
                             managePostsCategoriesComments.add_delete_post.call(posts[i]);
@@ -485,7 +494,6 @@
                     post_tbody = cc.post_tbody,
                     comment_table = cc.comment_table,
                     comment_tbody = cc.comment_tbody,
-                    view_comment = cc.view_comment,
                     category_table = cc.category_table;
 
                     if( category_form.is(':visible') ) {
@@ -506,11 +514,6 @@
                     if( post_table.is(':visible') ) {
                         
                         post_table.hide();
-                    }
-
-                    if( view_comment.is(':visible') ) {
-
-                        view_comment.hide();
                     }
 
                 $.get("{{ route('comment.index') }}", function (comments) {
@@ -541,13 +544,13 @@
                                 month++;
                                 created = created.getDate() + '-' + month + '-' + created.getFullYear() + " " + created.getHours() + ":" + created.getMinutes() + ":" + created.getSeconds();
 
-                            var url = "{{ route('post.view', ':slug') }}"
+                            var url = "{{ route('post.show', ':slug') }}"
                             url = url.replace(':slug', comments[i].post_slug);
                             url = url + "#comment-" + comments[i].id;
 
-                            var description = comments[i]['content'].substr(0, 100);
+                            var description = comments[i]['content'].substr(0, 50);
 
-                            if(comments[i]['content'].length > 100)
+                            if(comments[i]['content'].length > 50)
                             {
                                 description = description + "...";
                             }
@@ -556,7 +559,6 @@
                             comment_tbody.append(current_row);
 
                             cc.add_delete_comment.call(comments[i]);
-                            cc.add_view_comment.call(comments[i]);
                             cc.add_approve_comment.call(comments[i]);
                         }
                     }
@@ -657,27 +659,6 @@
                         $('#deleteBtn').attr("element", "comment");
                     });
             },
-
-            add_view_comment: function() {
-                var comment = this;
-
-                $('<button class="btn btn-primary" data-id="' + comment['id'] + '">View</button>')
-                    .prependTo($('#comment_tbody td').last())
-                    .on('click', function () {
-                        var page = $('a.checked').attr('number');
-                        start = (page - 1) * elements_per_page;
-
-                        $('#comment_table').hide();
-
-                        $('#dashboard_header').html('View Comment');
-                        $('#view_comment').show();
-                        $('img#image').attr('src', "/uploads/avatars/" + comment['avatar']);
-                        $('#commenter').html(comment['author']);
-                        $('#commenter_email').html(comment['email']);
-                        $('#comment_content').html(comment['content']);
-                        $('#hideComment').on('click', managePostsCategoriesComments.show_all_comments);
-                    });
-            }
         };
 
         managePostsCategoriesComments.init();

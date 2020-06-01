@@ -56,6 +56,20 @@
             height: 50px;
             float: left;
         }
+
+        #profile-description h1{
+            padding: 10px, 0px;
+            font-size: 30px;
+        }
+
+        #profile-description h2{
+            margin-bottom: 10px;
+            font-size: 30px;
+        }
+
+        .comment-actions{
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>

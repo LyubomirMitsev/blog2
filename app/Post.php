@@ -38,6 +38,11 @@ class Post extends Model
         return $this->hasMany(Comment::class)->where('comments.approved', '=', '1');
     }
 
+    public function unapproved_comments()
+    {
+        return $this->hasMany(Comment::class)->where('comments.approved', '=', '0');
+    }
+
     public function getRouteKeyName() 
     {
         return 'slug';

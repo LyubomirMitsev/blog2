@@ -53,7 +53,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $attributes = $request->only(['title', 'content']);
+        $attributes = $request->validated();
 
         $attributes['user_id'] = Auth::user()->id;
 
@@ -89,7 +89,7 @@ class PostController extends Controller
                             ->take(30)
                             ->get();
 
-        return view('post.show', ['post' => $post, 'comments' => $comments]);
+        return view('post.show_admin', ['post' => $post, 'comments' => $comments]);
     }
 
     /**
@@ -133,6 +133,7 @@ class PostController extends Controller
         } 
 
         return redirect()->route('admin.dashboard');
+        
     }
 
     /**
