@@ -121,3 +121,7 @@
         </div>
     @endauth
 @endsection
+
+@section('secondary-content')
+        @include('partials.admin-sidebar')
+@endsection

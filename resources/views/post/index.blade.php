@@ -57,3 +57,13 @@
         </article>
     @endif
 @endsection
+
+@role('admin')
+    @section('secondary-content')
+            @include('partials.admin-sidebar')
+    @endsection
+@else
+    @section('secondary-content')
+            @include('partials.sidebar')
+    @endsection
+@endrole

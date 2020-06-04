@@ -26,7 +26,6 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with(['categories', 'comments'])
-            ->where('deleted_at', null)
             ->orderBy('updated_at', 'desc')
             ->paginate(5);
 
@@ -74,7 +73,7 @@ class PostController extends Controller
         Purifier::clean($attributes['content']);
 
         try {
-            Post::create($attributes)->categories()->sync(Category::find($request->categories));
+            Post::create($attributes)->categories()->sync($request->categories);
             
         } catch (Exception $exception) {
             $response = [
@@ -132,7 +131,7 @@ class PostController extends Controller
 
         try {
             $post->update($attributes);
-            $post->categories()->sync(Category::find($request->categories));
+            $post->categories()->sync($request->categories);
             
         } catch (Exception $exception) {
             $response = [
@@ -141,7 +140,7 @@ class PostController extends Controller
             ];
         } 
 
-        return redirect()->route('post.index')->with($response['status'], $respons['message']);
+        return redirect()->route('post.index')->with($response['status'], $response['message']);
         
     }
 

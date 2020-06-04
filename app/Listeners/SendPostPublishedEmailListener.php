@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PostPublishedEmail;
 
-use App\User;
 use App\UnregisteredUser;
 
 class SendPostPublishedEmailListener
@@ -36,16 +35,9 @@ class SendPostPublishedEmailListener
 
         if($published != null) {
 
-            $users = User::whereHas('roles', function ($query) {
-                return $query->where('name', 'end-user');
-            })->get();
-
-            $unregistered_users = UnregisteredUser::whereHas('roles', function ($query) {
-                return $query->where('name', 'end-user');
-            })->get();
+            $unregistered_users = UnregisteredUser::all();
 
             Mail::to($unregistered_users)->send(new PostPublishedEmail($post));
-            Mail::to($users)->send(new PostPublishedEmail($post));
         }
     }
 }

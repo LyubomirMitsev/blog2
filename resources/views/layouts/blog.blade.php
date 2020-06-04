@@ -47,6 +47,10 @@
        .comment-actions{
            margin-top: 20px;
        }
+
+       .hidden{
+           display: none;
+       }
    </style>
 </head>
 <body>
@@ -70,12 +74,12 @@
                         <li class="{{ Request::url() == route('rules') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('rules') }}">Rules</a></li>
 
                         <span style="float: right;">
+                            
                         @guest
                             @if (Route::has('register'))
                                 <li class="{{ Request::url() == route('register') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
                             @endif
                                 <li class="{{ Request::url() == route('login') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                                <li class="{{ Request::url() == route('sign-up.create') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('sign-up.create') }}">{{ __('Sign Up') }}</a></li>
                         @else
                         <li class="page_item dropdown">
                                 <a id="navbarDropdown" class="page_item dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -99,6 +103,7 @@
                                 </div>
                             </li>
                         @endguest
+                            <li class="{{ Request::url() == route('sign-up.create') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('sign-up.create') }}">{{ __('Sign Up') }}</a></li>
                         </span>
                     </ul>
                 </div>
@@ -106,13 +111,14 @@
 
         </header>
 
+        @include('partials.errors')
+
+        @include('partials.flash-messages')
+
         <div id="main" class="wrapper">
 
             <div id="primary" class="site-content">
                 <div id="content" role="main">
-                    @include('partials.errors')
-
-                    @include('partials.flash-messages')
                     
                     @yield('primary-content')
                    
@@ -131,24 +137,10 @@
                         </form>
                     </aside>
                     <aside id="recent-comments-3" class="widget widget_recent_comments">
-                        <h3 class="widget-title">Most Recent comments</h3>
-                        <ul id="recentcomments"><li class="recentcomments">
-                            @foreach( $comments as $comment )
-                                <li class="recentcomments">
-                                    <span class="comment-author-link">{{ $comment->user->name }}</span>
-                                    on 
-                                    
-                                    @role('admin')
-                                    <a href="{{ route('post.show', $comment->post->slug) }}#comment-{{ $comment->id }}">
-                                        {{ $comment->post->title }}
-                                    </a> <!--link to the comment section in the post-->
-                                    @else
-                                    <a href="{{ route('post.view', $comment->post->slug) }}#comment-{{ $comment->id }}">
-                                        {{ $comment->post->title }}
-                                    </a> <!--link to the comment section in the post-->
-                                    @endrole
-                                </li>
-                            @endforeach
+                        <h3 class="widget-title">Most Recent comments</h3> 
+
+                        @yield('secondary-content')
+
                     </aside>		
                 </div><!-- #secondary -->
         </div>

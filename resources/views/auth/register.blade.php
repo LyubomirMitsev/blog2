@@ -65,3 +65,7 @@
     </form>
 </article>
 @endsection
+
+@section('secondary-content')
+        @include('partials.sidebar')
+@endsection

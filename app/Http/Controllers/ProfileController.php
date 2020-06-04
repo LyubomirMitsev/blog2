@@ -100,7 +100,7 @@ class ProfileController extends Controller
     }
 
 
-    public function update_avatar(SetAvatarRequest $request)
+    public function updateAvatar(SetAvatarRequest $request)
     {
         $attempt = boolval($request->hasFile('avatar'));
 

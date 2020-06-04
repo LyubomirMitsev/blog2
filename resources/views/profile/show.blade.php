@@ -18,3 +18,13 @@
     <a href="{{ route('profile.edit', $user->id) }}" class="btn btn-primary" style="margin-top: 5px;">Edit Profile</a>
 </article>
 @endsection
+
+@role('admin')
+    @section('secondary-content')
+            @include('partials.admin-sidebar')
+    @endsection
+@else
+    @section('secondary-content')
+            @include('partials.sidebar')
+    @endsection
+@endrole

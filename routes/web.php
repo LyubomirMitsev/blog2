@@ -29,10 +29,6 @@ Route::get('/posts/category/{category}', 'PostViewController@showPostsFromCatego
 
 Route::middleware('guest')->group( function () {
 
-    Route::resource('sign-up', 'SignUpController')->only([
-        'create', 'store'
-    ]);
-
     Route::get('/admin', 'AdminController@showLoginForm')->name('admin.showLoginForm');
 
     Route::post('/admin', 'AdminController@login')->name('admin.login');
@@ -40,11 +36,15 @@ Route::middleware('guest')->group( function () {
 
 Auth::routes();
 
+Route::resource('sign-up', 'SignUpController')->only([
+    'create', 'store'
+]);
+
 Route::middleware('auth')->group( function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::post('/profile/avatar', 'ProfileController@update_avatar')->name('profile.avatar');
+    Route::post('/profile/avatar', 'ProfileController@updateAvatar')->name('profile.avatar');
 
     Route::resource('profile', 'ProfileController')->only([
         'show', 'edit' , 'update' , 'destroy'
