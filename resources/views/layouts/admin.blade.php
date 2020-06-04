@@ -14,12 +14,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <title>AdminLTE 3 | Starter</title>
 
+  
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('css/admin-lte/adminlte.css') }}" rel="stylesheet">
   <link href="{{ asset('css/font-awsome/all.min.css') }}" rel="stylesheet">
   <link href="{{ asset('css/admin-lte/adminlte.min.css.map') }}" rel="stylesheet">
   <link href="{{ asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet">
-
+  <link href="{{ asset('select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
   <style>
         #profile_image{
             height: 35px;
@@ -50,7 +54,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         #category_form{      
             width: inherit;
-            display: none;
         }
 
         #category_form input, textarea{
@@ -59,11 +62,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         #post_form{
             width: inherit;
-            display: none;
+        }
+
+        #post_form div{
+            margin: 5px 0px;
         }
 
         #post_form input, textarea, button.checkbox-list-button{
           width: 100%;
+        }
+
+        select.multiple{
+          width: 98.5%;
         }
 
         button.checkbox-list-button{
@@ -87,30 +97,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             cursor: pointer;
         }
 
-        .pagination{
-            display: inline-block;
-        }
-        
-        .pagination a{
-            border: 1px solid #ddd;
-            float: left;
-            padding: 8px 16px;
-        }  
-
-        a.pages:hover, .nextValue:hover, .preValue:hover{
-            background-color: #ddd;
-            cursor: pointer;
-        }
-
         #category_table{
             display: none;
         }
 
         #post_table{
-            display: none;
-        }
-
-        #comment_table{
             display: none;
         }
 
@@ -122,8 +113,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
            background-color: #ddd;
         }
 
-        .actions{
-            width: 200px;
+        th.actions{
+            width: 170px;
             text-align: center;
         }
 
@@ -135,7 +126,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             float: right;
         }
 
-        #post_form button{
+        #post_form button, a{
             margin: 5px 0px;
         }
 
@@ -178,19 +169,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <form id="profile-form" action="{{ route('profile.show', Auth::user()->id ) }}" method="GET" style="display: none;">
             </form>
 
-            <a class="dropdown-item" href="{{ route('profile.show', Auth::user()->id ) }}"
-                onclick="event.preventDefault();
-                              document.getElementById('edit-profile-form').submit();">
-                {{ __('Edit Profile info') }}
-            </a>
-
-            <form id="edit-profile-form" action="{{ route('profile.show', Auth::user()->id ) }}" method="GET">
-            </form>
-
-            <button class="dropdown-item" class="btn btn-danger" role="button" data-toggle="modal" data-target="#delete-profile-{{ Auth::user()->id }}">
-                {{ __('Delete Profile') }}
-            </button>
-
             <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                               document.getElementById('logout-form').submit();">
@@ -205,10 +183,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </ul>
   </nav>
   <!-- /.navbar -->
-
-  @include('modals.deleteProfileModal')
-  @include('modals.deletePostOrCategoryModal')
-  @include('modals.approveCommentModal')
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -235,13 +209,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <ul class="nav nav-treeview">
 
               <li class="nav-item">
-                <a href="#" id="index_category" class="nav-link">
+                <a href="{{ route('category.index') }}" id="index_category" class="nav-link">
                   <p>All Categories</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="#" class="nav-link" id="new_category">
+                <a href="{{ route('category.create')}}" class="nav-link" id="new_category">
                   <p>New Category</p>
                 </a>
               </li>
@@ -256,12 +230,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link" id="index_post">
+                <a href="{{ route('post.index') }}" class="nav-link" id="index_post">
                   <p>All Posts</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link" id="new_post">
+                <a href="{{ route('post.create') }}" class="nav-link" id="new_post">
                   <p>New Post</p>
                 </a>
               </li>
@@ -276,7 +250,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link" id="index_comment">
+                <a href="{{ route('comment.index') }}" class="nav-link" id="index_comment">
                   <p>Unapproved Comments</p>
                 </a>
               </li>
@@ -298,7 +272,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-12">
-            <h1 class="m-0 text-dark" id="dashboard_header">Dashboard</h1>
+            <h1 class="m-0 text-dark" id="dashboard_header">
+              @yield('title')
+            </h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -337,9 +313,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </body>
 
 <!-- Scripts -->
-
-@include('jquery.manageAdminFunctions')
-@include('jquery.adminDashboardPostJS')
 
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/admin-lte/adminlte.min.js') }}"></script>

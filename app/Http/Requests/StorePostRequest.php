@@ -26,7 +26,7 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required|min:5|unique:posts',
-            'categories' => 'required',
+            'categories' => 'required|array',
             'content' => 'required',
         ];
     }

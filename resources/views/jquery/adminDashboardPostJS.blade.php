@@ -5,5 +5,8 @@
         filebrowserUploadUrl: "{{route('upload', ['_token' => csrf_token() ])}}",
         filebrowserUploadMethod: 'form'
     });
-</script>
 
+    $(document).ready(function() {
+        $('.multiple').select2();
+    });
+</script>

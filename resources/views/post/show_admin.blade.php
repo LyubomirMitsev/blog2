@@ -92,8 +92,8 @@
                         </section>
                     </article><!-- #comment-## -->
                 </li><!-- #comment-## -->
-                @include('modals.approveCommentFromShowPageModal')
-                @include('modals.deleteCommentFromShowPageModal')
+                @include('modals.approveCommentModal')
+                @include('modals.deleteCommentModal')
             @endforeach
         </ol><!-- .commentlist -->
     </div>

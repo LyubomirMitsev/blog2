@@ -47,13 +47,24 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request)
     {
-        Auth::user()->update([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-        ]);
+        $request['password'] = Hash::make($request['password']);
 
-        return redirect()->route('profile.show', Auth::user()->id);
+        $response = [
+            'status' => 'success',
+            'message' => 'Your account has successfully been updated'
+        ];
+
+        try {
+            Auth::user()->update($request->only(['name', 'email', 'password']));
+
+        } catch (Exception $exception) {
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
+        }
+
+        return redirect()->route('profile.show', Auth::user()->id)->with($response['status'], $response['message']);
     }
 
     /**
@@ -68,20 +79,24 @@ class ProfileController extends Controller
 
         Auth::logout();
 
+        $response = [
+            'status' => 'success',
+            'message' => 'Your account has been deleted'
+        ];
+
         try {
             $user->delete();
             
-            session()->flash('success', 'Your account has been deleted');
-
             return redirect()->route('login');
 
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and your profile was not deleted.');
-        } catch (Error $error) {
-            Session::flash('error', 'An error occured and your profile was not deleted.');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         }
 
-        return redirect()->back();
+        return redirect()->back()->with($response['status'], $response['message']);
     }
 
 

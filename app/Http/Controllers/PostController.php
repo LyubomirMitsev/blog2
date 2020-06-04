@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Purifier;
-use Session;
 use View;
 
 class PostController extends Controller
@@ -26,23 +25,24 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = DB::table('posts')
-            ->where('deleted_at', null)
+        $posts = Post::where('deleted_at', null)
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->paginate(5);
 
-        foreach ($posts as $post) {
-            $author = User::find($post->user_id);
-            $categories = Post::find($post->id)->categories;
-            $comments = Comment::where('post_id', $post->id)
-                ->get();
+        return view('admin.post_index', ['posts' => $posts]);
+    }
 
-            $post->author = $author->name;
-            $post->comments = $comments;
-            $post->categories = $categories;
-        }
-
-        return response()->json($posts);
+    /**
+     * Show the form for creating the specified resource.
+     *
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $categories = Category::all();
+        
+        return view('admin.post_create', ['categories' => $categories]);
     }
 
     /**
@@ -65,16 +65,24 @@ class PostController extends Controller
 
         }
 
+        $response = [
+            'status' => 'success', 
+            'message' => 'The new post has successfully been saved.'
+        ];
+
         Purifier::clean($attributes['content']);
 
         try {
             Post::create($attributes)->categories()->sync(Category::find($request->categories));
-            Session::flash('success', 'Post saved successfully!');
+            
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and the post could not be created.');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         } 
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('post.index')->with($response['status'], $response['message']);
     }
 
     /**
@@ -84,12 +92,8 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
-    {
-        $comments = Comment::orderBy('created_at', 'desc')
-                            ->take(30)
-                            ->get();
-
-        return view('post.show_admin', ['post' => $post, 'comments' => $comments]);
+    {        
+        return view('post.show_admin', ['post' => $post]);
     }
 
     /**
@@ -98,15 +102,11 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $post = Post::find($id);
+        $categories = Category::all();
 
-        $categories = Post::find($id)->categories;
-
-        $post->categories = $categories;
-
-        return response()->json($post);
+        return view('admin.post_edit', ['post' => $post, 'categories' => $categories]);
     }
 
     /**
@@ -124,15 +124,23 @@ class PostController extends Controller
             $attributes['published_at'] = Carbon::now();
         }
 
+        $response = [
+            'status' => 'success',
+            'message' => 'The requested post has successfully been updated.'
+        ];
+
         try {
             $post->update($attributes);
             $post->categories()->sync(Category::find($request->categories));
-            Session::flash('success', 'The requested post has successfully been updated.');
+            
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and we could not update the requested post!');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         } 
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('post.index')->with($response['status'], $respons['message']);
         
     }
 
@@ -144,13 +152,21 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $response = [
+            'status' => 'success',
+            'message' => 'The requested post has successfully been deleted.'
+        ];
+
         try {
             $post->delete();
-            Session::flash('success', 'The requested post has been successfully deleted.');
+            
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and we could not delete the requested post!');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         } 
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('post.index')->with($response['status'], $response['message']);
     }
 }

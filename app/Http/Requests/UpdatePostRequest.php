@@ -26,7 +26,7 @@ class UpdatePostRequest extends FormRequest
     {
         return [
             'title' => 'required|min:5|unique:posts,title,' . $this->post->id,
-            'categories' => 'required',
+            'categories' => 'required|array',
             'content' => 'required',
         ];
     }

@@ -1,6 +1,55 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-@section('content')
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+    <style>
+        #profile_image{
+           height: 150px;
+           float: left;
+           border-radius: 50%;
+           margin-right: 25px;
+           margin-bottom: 10px;
+       }
+
+       #image_submit{
+           margin-top: 5px;
+       }
+
+       .navbar-toggler{
+           position: relative;
+           padding-left: 50px;
+       }
+         
+       .author-image{
+           width: 50px;
+           height: 50px;
+           float: left;
+       }
+
+       .comment-actions{
+           margin-top: 20px;
+       }
+   </style>
+</head>
+<body>
     <div id="page" class="hfeed site">
         <header id="masthead" class="site-header" role="banner">
             <hgroup>
@@ -13,9 +62,44 @@
             <nav id="site-navigation" class="main-navigation" role="navigation">
                 <div class="nav-menu">
                     <ul>
+                        @role('admin')
+                            <li><a class="page_item" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        @endrole
                         <li class="{{ Request::url() == route('welcome') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('welcome') }}">Recent Posts</a></li>
                         <li class="{{ Request::url() == route('contact') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('contact') }}">Contact</a></li>
                         <li class="{{ Request::url() == route('rules') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('rules') }}">Rules</a></li>
+
+                        <span style="float: right;">
+                        @guest
+                            @if (Route::has('register'))
+                                <li class="{{ Request::url() == route('register') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            @endif
+                                <li class="{{ Request::url() == route('login') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                                <li class="{{ Request::url() == route('sign-up.create') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('sign-up.create') }}">{{ __('Sign Up') }}</a></li>
+                        @else
+                        <li class="page_item dropdown">
+                                <a id="navbarDropdown" class="page_item dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('profile.show', Auth::user()->id ) }}">
+                                        {{ __('Profile') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        @endguest
+                        </span>
                     </ul>
                 </div>
             </nav><!-- #site-navigation -->
@@ -26,7 +110,10 @@
 
             <div id="primary" class="site-content">
                 <div id="content" role="main">
-        
+                    @include('partials.errors')
+
+                    @include('partials.flash-messages')
+                    
                     @yield('primary-content')
                    
                 </div><!-- #content -->
@@ -66,4 +153,7 @@
                 </div><!-- #secondary -->
         </div>
     </div>
-@endsection
+</body>
+</html>
+
+

@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateCategoryRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Session;
 
 class CategoryController extends Controller
 {
@@ -19,17 +18,21 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = DB::table('categories')
-            ->where('deleted_at', null)
+        $categories = Category::where('deleted_at', null)
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->paginate(5);
 
-        foreach ($categories as $category) {
-            $current = Category::find($category->id);
-            $category->posts = $current->posts->count();
-        }
+        return view('admin.category_index', ['categories' => $categories]);
+    }
 
-        return response()->json($categories);
+    /**
+     * Show the form for creating the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.category_create');
     }
 
     /**
@@ -59,19 +62,7 @@ class CategoryController extends Controller
             ];
         }
 
-        Session::flash($response['status'], $response['message']);
-        return redirect()->route('admin.dashboard');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        return response()->json($category);
+        return redirect()->route('category.index')->with($response['status'], $response['message']);
     }
 
     /**
@@ -82,7 +73,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return response()->json($category);
+        return view('admin.category_edit', ['category' => $category]);
     }
 
     /**
@@ -94,14 +85,22 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $response = [
+            'status' => 'success', 
+            'message' => 'The requested category has successfully been updated!'
+        ];
+
         try {
             $category->update($request->only(['name', 'description']));
-            Session::flash('success', 'The requested category has successfully been updated!');
+            
         } catch (Exception $exception) {
-            Session::flash('error', 'An error occured and we could not update the requested category!');
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
         } 
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('category.index')->with($response['status'], $response['message']);
     }
 
     /**
@@ -114,17 +113,28 @@ class CategoryController extends Controller
     {
         $postCount = $category->posts->count();
 
+        $response = [
+            'status' => 'success', 
+            'message' => 'The requested category has successfully been deleted.'
+        ];
+
         if ($postCount > 0) {
-            Session::flash('error', 'The requested for deletion category has active posts in it. Make sure you remove all active posts from the category before you try to delete it.');
+            $response = [
+                'status' => 'error',
+                'message' => 'The requested for deletion category has active posts in it. Make sure you remove all active posts from the category before you try to delete it.'
+            ];
         } else {
             try {
                 $category->delete();
-                Session::flash('success', 'The requested category has successfully been deleted.');
+                
             } catch (Exception $exception) {
-                Session::flash('error', 'An error occured and we could not delete the requested category!');
+                $response = [
+                    'status' => 'error',
+                    'message' => $exception->message
+                ];
             } 
         }
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('category.index')->with($response['status'], $response['message']);
     }
 }

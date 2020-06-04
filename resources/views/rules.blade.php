@@ -15,7 +15,12 @@
                 <li>No cynicism</li>
                 <li>No connections to illegal content</li>
                 <li>Questions are to be asked in the contant form</li>
+                <li>In order to get notified via email whenever a new post is published you need eighter
+                    to have a registration or sign up for notifications in the <strong>sign up</strong>
+                    button on the navigation above.
+                </li>
             </ul>
+            <h2 style="text-align: center;">Important! In order to write comments on a post you must have a registration and be logged in.</h2>
         </div><!-- .entry-content -->
         <footer class="entry-meta">
         </footer><!-- .entry-meta -->

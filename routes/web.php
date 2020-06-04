@@ -13,19 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'BlogPublicController@welcomePage')->name('welcome');
+Route::get('/', 'PostViewController@welcome')->name('welcome');
 
-Route::get('/contact', 'BlogPublicController@contactPage')->name('contact');
+Route::get('/contact', 'ContactController@contact')->name('contact');
 
-Route::post('/contact', 'BlogPublicController@postContact')->name('contact.send');
+Route::post('/contact', 'ContactController@postContact')->name('contact.send');
 
-Route::get('/rules', 'BlogPublicController@rulesPage')->name('rules');
+Route::get('/rules', 'RuleController@rules')->name('rules');
 
-Route::get('/posts', 'BlogPublicController@searchPostByTitle')->name('post.search');
+Route::get('/posts', 'PostSearchController@search')->name('post.search');
 
-Route::get('/posts/{post}', 'BlogPublicController@viewPost')->name('post.view');
+Route::get('/posts/{post}', 'PostViewController@show')->name('post.view');
 
-Route::get('/posts/category/{category}', 'BlogPublicController@viewPostsFromCategory')->name('post.from.category');
+Route::get('/posts/category/{category}', 'PostViewController@showPostsFromCategory')->name('post.from.category');
 
 Route::middleware('guest')->group( function () {
 
@@ -56,12 +56,10 @@ Route::middleware('auth')->group( function () {
 
         Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
 
-        Route::resource('post', 'PostController')->except([
-            'create'
-        ]);
+        Route::resource('post', 'PostController');
 
         Route::resource('category', 'CategoryController')->except([
-            'create'
+            'show'
         ]);
 
         Route::resource('comment', 'CommentController')->except([

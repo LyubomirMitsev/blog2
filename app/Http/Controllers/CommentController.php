@@ -6,10 +6,8 @@ use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-
 use App\User;
 use App\Post;
-use Session;
 
 class CommentController extends Controller
 {
@@ -20,24 +18,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = DB::table('comments')
-                            ->where('deleted_at', null)
+        $comments = Comment::where('deleted_at', null)
                             ->where('approved', 0)
                             ->orderBy('created_at', 'desc')
-                            ->get();
+                            ->paginate(5);
 
-        foreach($comments as $comment) {
-            $author = User::find($comment->user_id);
-            $post = Post::find($comment->post_id);
-
-            $comment->author = $author->name;
-            $comment->email = $author->email;
-            $comment->post = $post->title;
-            $comment->post_slug = $post->slug;
-            $comment->avatar = $author->avatar;
-        }
-
-        return response()->json($comments);
+        return view('admin.comment_index', ['comments' => $comments]);
     }
 
     /**
@@ -65,9 +51,7 @@ class CommentController extends Controller
             ];
         }
 
-        Session::flash($response['status'], $response['message']);
-
-        return redirect()->back();
+        return redirect()->back()->with($response['status'], $response['message']);
     }
 
     /**
@@ -83,9 +67,12 @@ class CommentController extends Controller
                             ->where('id', $id)
                             ->update(['approved' => 1]);
 
-        Session::flash('success', 'The comment has been successfully approved so now all end-users may see it on the post.');
+        $response = [
+            'status' => 'success',
+            'message' => 'The comment has been successfully approved so now all end-users may see it on the post.'
+        ];
 
-        return redirect()->back();
+        return redirect()->back()->with($response['status'], $response['message']);
     }
 
     /**
@@ -94,14 +81,23 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::find($id);
+        $response = [
+            'status' => 'success',
+            'message' => 'The requested comment has been successfully deleted.'
+        ];
 
-        $comment->delete();
+        try {
+            $comment->delete();
+            
+        } catch (Exception $exception) {
+            $response = [
+                'status' => 'error',
+                'message' => $exception->message
+            ];
+        } 
 
-        Session::flash('success', 'The requested comment has been successfully deleted.');
-
-        return redirect()->back();
+        return redirect()->back()->with($response['status'], $response['message']);
     }
 }
