@@ -18,7 +18,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::where('deleted_at', null)
+        $comments = Comment::with('post')
+                            ->where('deleted_at', null)
                             ->where('approved', 0)
                             ->orderBy('created_at', 'desc')
                             ->paginate(5);

@@ -11,7 +11,8 @@ class PostViewController extends Controller
 {
     public function welcome() 
     {
-        $posts = Post::where('published_at', '!=', null)
+        $posts = Post::with(['categories', 'comments'])
+                            ->where('published_at', '!=', null)
                             ->orderBy('published_at', 'desc')
                             ->paginate(10);
     

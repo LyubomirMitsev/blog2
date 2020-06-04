@@ -18,7 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('deleted_at', null)
+        $categories = Category::with('posts')
+            ->where('deleted_at', null)
             ->orderBy('updated_at', 'desc')
             ->paginate(5);
 
