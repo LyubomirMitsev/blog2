@@ -20,6 +20,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+ 
     <style>
         #profile_image{
            height: 150px;
@@ -147,5 +149,9 @@
     </div>
 </body>
 </html>
+
+<script>
+    $('.entry-content a').attr('target', '_blank')
+</script>
 
 
