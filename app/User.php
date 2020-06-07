@@ -58,12 +58,12 @@ class User extends Authenticatable
 
     public function categories()
     {
-        return $this->hasMany(Categories::class);
+        return $this->hasMany(Category::class);
     }
 
     public function comments() 
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comment::class);
     }
 
     public function isAdmin()

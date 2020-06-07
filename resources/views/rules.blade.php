@@ -15,8 +15,8 @@
                 <li>No cynicism</li>
                 <li>No connections to illegal content</li>
                 <li>Questions are to be asked in the contant form</li>
-                <li>In order to get notified via email whenever a new post is published you need eighter
-                    to have a registration or sign up for notifications in the <strong>sign up</strong>
+                <li>In order to get notified via email whenever a new post is published you need
+                    to  sign up for notifications in the <strong>sign up</strong>
                     button on the navigation above.
                 </li>
             </ul>

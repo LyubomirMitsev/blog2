@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Comment;
+use App\User;
 use Session;
 
 class PostViewController extends Controller
@@ -15,7 +17,7 @@ class PostViewController extends Controller
                             ->where('published_at', '!=', null)
                             ->orderBy('published_at', 'desc')
                             ->paginate(10);
-    
+        
         return view('welcome', ['posts' => $posts]);
     }
 

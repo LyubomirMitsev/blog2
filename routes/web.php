@@ -42,8 +42,6 @@ Route::resource('sign-up', 'SignUpController')->only([
 
 Route::middleware('auth')->group( function () {
 
-    Route::get('/home', 'HomeController@index')->name('home');
-
     Route::post('/profile/avatar', 'ProfileController@updateAvatar')->name('profile.avatar');
 
     Route::resource('profile', 'ProfileController')->only([
