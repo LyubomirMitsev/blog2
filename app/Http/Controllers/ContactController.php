@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\SendEmailRequest;
 use App\Mail\UserSendEmail;
 use App\User;
+use App\Helpers\Helper;
 
 class ContactController extends Controller
 {
@@ -17,6 +18,8 @@ class ContactController extends Controller
 
     public function postContact(SendEmailRequest $request)
     {
+        Helper::handleRecaptchaVerification($request);
+
         $data = $request->only(['your-name', 'your-email', 'your-subject', 'your-message']);
         
         $user = User::role('admin')->get();

@@ -21,6 +21,7 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdbawEVAAAAAONrcNbJRrIJPZ7fBa4YYM8sts5L"></script>
  
     <style>
         #profile_image{
@@ -52,6 +53,16 @@
 
        .hidden{
            display: none;
+       }  
+
+       .sign-up{
+           float: right;
+           margin-top: 10px;
+       }
+
+       hgroup{
+           width: 60%;
+           display: inline-block;
        }
    </style>
 </head>
@@ -64,6 +75,15 @@
                 </h1>
                 <h2 class="site-description">Thank you for visiting my blog</h2>
             </hgroup>
+
+            <form role="sign-up" method="post" action="{{ route('sign-up.store') }}" class="sign-up">
+                @csrf
+                <div>
+                    <label class="screen-reader-text" for="s">Sign up with email:</label>
+                    <input type="text" value="{{ Request::get('email') }}" name="email">
+                    <input type="submit" value="Sign Up">
+                </div>
+            </form>
 
             <nav id="site-navigation" class="main-navigation" role="navigation">
                 <div class="nav-menu">
@@ -105,7 +125,6 @@
                                 </div>
                             </li>
                         @endguest
-                            <li class="{{ Request::url() == route('sign-up.create') ? 'current_page_item' : 'page_item' }}"><a href="{{ route('sign-up.create') }}">{{ __('Sign Up') }}</a></li>
                         </span>
                     </ul>
                 </div>
@@ -152,6 +171,16 @@
 
 <script>
     $('.entry-content a').attr('target', '_blank')
+</script>
+
+<script>
+      grecaptcha.ready(function() {
+        grecaptcha.execute('6LdbawEVAAAAAONrcNbJRrIJPZ7fBa4YYM8sts5L', {action: 'submit'}).then(function(token) {
+            if (token) {
+                document.getElementById('recaptcha').value = token;
+            }
+        });
+      });
 </script>
 
 

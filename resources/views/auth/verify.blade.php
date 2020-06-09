@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.blog')
 
-@section('content')
+@section('primary-content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -25,4 +25,8 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('secondary-content')
+        @include('partials.sidebar')
 @endsection

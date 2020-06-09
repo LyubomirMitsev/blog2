@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use App\UnregisteredUser;
 use App\Http\Requests\SignUpRequest;
+use App\Helpers\Helper;
 
 class SignUpController extends Controller
 {
@@ -33,7 +34,10 @@ class SignUpController extends Controller
 
         if( $user )
         {
-            Session::flash('success', 'You have successfully signed up. From now on you will be notified via email whenever a new post is published.');
+            Session::flash('success', 'You have successfully signed up. In order to get 
+                                        notified whenever a new post is published you 
+                                        still need to verify your email. please check your 
+                                        email for a verification link.');
         }
 
         return redirect()->route('sign-up.create');

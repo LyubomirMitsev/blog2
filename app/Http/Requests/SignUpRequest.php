@@ -24,7 +24,7 @@ class SignUpRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|unique:unregistered_users|email|string',
+            'email' => 'required|email|unique:unregistered_users,email,NULL,id,deleted_at,NULL',
         ];
     }
 }

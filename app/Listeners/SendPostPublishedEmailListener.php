@@ -35,7 +35,7 @@ class SendPostPublishedEmailListener
 
         if($published != null) {
 
-            $unregistered_users = UnregisteredUser::all();
+            $unregistered_users = UnregisteredUser::where('email_verified_at', '!=', null);
 
             Mail::to($unregistered_users)->send(new PostPublishedEmail($post));
         }

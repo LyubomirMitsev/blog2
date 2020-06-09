@@ -28,7 +28,14 @@
                         <p>Your Message<br>
                             <span class="wpcf7-form-control-wrap your-message">
                                 <textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea></span> </p>
-                        <p><input type="submit" value="Send" class="wpcf7-form-control wpcf7-submit"><span class="ajax-loader"></span></p>
+
+                                <input type="hidden" name="recaptcha" id="recaptcha">
+
+                        <p><input type="submit" value="Send" class="wpcf7-form-control wpcf7-submit" 
+                            class="g-recaptcha" 
+                            data-sitekey="6LdbawEVAAAAAONrcNbJRrIJPZ7fBa4YYM8sts5L" 
+                            data-callback='onSubmit' 
+                            data-action='submit'><span class="ajax-loader"></span></p>
                         <div class="wpcf7-response-output wpcf7-display-none"></div>
                     </form>
                 </div>

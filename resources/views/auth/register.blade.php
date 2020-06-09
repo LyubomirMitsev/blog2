@@ -55,9 +55,15 @@
             </div>
         </div>
 
+        <input type="hidden" name="recaptcha" id="recaptcha">
+        
         <div class="form-group row mb-0">
             <div class="col-md-6 offset-md-4">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary"
+                            class="g-recaptcha" 
+                            data-sitekey="6LdbawEVAAAAAONrcNbJRrIJPZ7fBa4YYM8sts5L" 
+                            data-callback='onSubmit' 
+                            data-action='submit'>
                     {{ __('Register') }}
                 </button>
             </div>

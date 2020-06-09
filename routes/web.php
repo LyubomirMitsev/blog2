@@ -34,7 +34,7 @@ Route::middleware('guest')->group( function () {
     Route::post('/admin', 'AdminController@login')->name('admin.login');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::resource('sign-up', 'SignUpController')->only([
     'create', 'store'
@@ -42,13 +42,16 @@ Route::resource('sign-up', 'SignUpController')->only([
 
 Route::middleware('auth')->group( function () {
 
-    Route::post('/profile/avatar', 'ProfileController@updateAvatar')->name('profile.avatar');
+    Route::middleware('verified')->group( function () {
+        
+        Route::post('/profile/avatar', 'ProfileController@updateAvatar')->name('profile.avatar');
 
-    Route::resource('profile', 'ProfileController')->only([
-        'show', 'edit' , 'update' , 'destroy'
-    ]);
+        Route::resource('profile', 'ProfileController')->only([
+            'show', 'edit' , 'update' , 'destroy'
+        ]);
 
-    Route::post('/comment', 'CommentController@store')->name('comment.store');
+        Route::post('/comment', 'CommentController@store')->name('comment.store');
+    });
 
     Route::middleware('role:admin')->group( function () {
 
