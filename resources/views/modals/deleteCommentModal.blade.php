@@ -1,6 +1,6 @@
 <!-- Delete Comment from show page Modal -->
 
-<div class="modal modal-fade" id="delete-comment-{{ $comment->id }}" aria-hidden="true">
+<div class="modal modal-fade" id="confirmDeleteCommentModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
             </div>
         
-        <form method="POST" class="form-horizontal" action="{{ route('comment.destroy', $comment->id) }}">
+        <form method="POST" class="form-horizontal" action="">
                 @csrf
                 @method('DELETE')
 

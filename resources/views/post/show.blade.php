@@ -4,7 +4,7 @@
     <article id="post-{{ $post->id }}" class="post type-post status-publish format-standard hentry">
         <header class="entry-header">
 
-            <h1 class="entry-title"><a href="{{ route('post.view', $post->slug) }}">{{ $post->title }}</a></h1>
+        <h1 class="entry-title"><a href="{{ route('post.view', $post->slug) }}" id="post-title" element="{{ $post->slug }}" >{{ $post->title }}</a></h1>
             <div class="comments-link">
                 <a href="{{ route('post.view', $post->slug) }}#comments">{{ $post->comments()->count() }} comments</a> <!--link to comments-->				
             </div>
@@ -35,28 +35,7 @@
         </h2>
 
         <ol class="commentlist">
-            @foreach($post->comments as $comment)
-                <li class="comment even thread-even depth-1" id="li-comment-287126">
-                    <article id="comment-{{ $comment->id }}" class="comment">
-                        <header class="comment-meta comment-author vcard">
-                            <img src="/uploads/avatars/{{ $comment->user->avatar }}" class="author-image">                            <cite>
-                             
-                                <b class="fn">
-                                    {{ $comment->user->name }}
-                                </b> 
-                                <p class="author-time">
-                                    {{ date('F dS, Y-H:i', strtotime($comment->created_at)) }}
-                                </p>    
-                            		
-                        </header><!-- .comment-meta -->
-
-                        
-                        <section class="comment-content comment">
-                            {{ $comment->content }}
-                        </section><!-- .comment-content -->
-                    </article><!-- #comment-## -->
-                </li><!-- #comment-## -->
-            @endforeach
+            
         </ol><!-- .commentlist -->
     </div>
 
@@ -77,7 +56,7 @@
                 </p>
 
                 <p class="form-submit">
-                    <button type="submit" id="submit" class="submit">Publish</button> 
+                    <button type="submit" id="submit_comment_button" class="submit">Publish</button> 
                 </p>
             </form>
         </div>

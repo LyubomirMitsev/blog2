@@ -1,6 +1,6 @@
 <!-- Delete Post Modal -->
 
-<div class="modal modal-fade" id="delete-post-{{ $post->slug }}" aria-hidden="true">
+<div class="modal modal-fade" id="confirmDeletePostModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,12 +8,12 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
             </div>
         
-            <form method="POST" class="form-horizontal" action="{{ route('post.destroy', $post->slug) }}">
+            <form method="POST" class="form-horizontal" action="">
                 @csrf
                 @method('DELETE')
 
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the {{ $post->name }} post? Once deleted
+                    <p>Are you sure you want to delete this post? Once deleted
                     it will no longer be visable in the blog.</p>
                 </div>
             

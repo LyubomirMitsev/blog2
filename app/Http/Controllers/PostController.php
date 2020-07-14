@@ -16,6 +16,9 @@ use Illuminate\Support\Str;
 use Purifier;
 use View;
 
+use Yajra\DataTables\Services\DataTable;
+use App\DataTables\PostsDataTable;
+
 class PostController extends Controller
 {
     /**
@@ -25,11 +28,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['categories', 'comments'])
-            ->orderBy('updated_at', 'desc')
-            ->paginate(5);
-
-        return view('admin.post_index', ['posts' => $posts]);
+        return view('admin.post_index');
     }
 
     /**
@@ -168,5 +167,12 @@ class PostController extends Controller
         } 
 
         return redirect()->route('post.index')->with($response['status'], $response['message']);
+    }
+
+    public function getAllPosts()
+    {
+        $postQuery = Post::with('categories', 'user', 'comments');
+
+        return datatables()->of($postQuery)->make();
     }
 }

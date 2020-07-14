@@ -18,11 +18,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('posts')
-            ->orderBy('updated_at', 'desc')
-            ->paginate(5);
+        // $categories = Category::with('posts')
+        //     ->orderBy('updated_at', 'desc')
+        //     ->paginate(5);
 
-        return view('admin.category_index', ['categories' => $categories]);
+        return view('admin.category_index');
     }
 
     /**
@@ -136,5 +136,13 @@ class CategoryController extends Controller
         }
 
         return redirect()->route('category.index')->with($response['status'], $response['message']);
+    }
+
+
+    public function getAllCategories()
+    {
+        $categoryQuery = Category::with('posts');
+
+        return datatables()->of($categoryQuery)->make();
     }
 }

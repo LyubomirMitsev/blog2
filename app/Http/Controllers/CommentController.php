@@ -18,12 +18,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::with('post')
-                            ->where('approved', 0)
-                            ->orderBy('created_at', 'desc')
-                            ->paginate(5);
-
-        return view('admin.comment_index', ['comments' => $comments]);
+        return view('admin.comment_index');
     }
 
     /**
@@ -36,22 +31,33 @@ class CommentController extends Controller
     {
         $attributes = $request->only(['content', 'user_id', 'post_id']);
 
-        $response = [
-            'status' => 'success', 
-            'message' => 'Your comment has been published!'
-        ];
+        $comment = Comment::create($attributes);
 
-        try {
-            Comment::create($attributes);
+        $comment = Comment::where('id', $comment->id)->with('user')->first();
+
+        return $comment->toJson();
+
+        // $response = [
+        //     'status' => 'success', 
+        //     'message' => 'Your comment has been published!'
+        // ];
+
+        // try {
+        //     Comment::create($attributes);
             
-        } catch (Exception $exception) {
-            $response = [
-                'status' => 'error',
-                'message' => $exception->message
-            ];
-        }
+        // } catch (Exception $exception) {
+        //     $response = [
+        //         'status' => 'error',
+        //         'message' => $exception->message
+        //     ];
+        // }
 
-        return redirect()->back()->with($response['status'], $response['message']);
+        // return redirect()->back()->with($response['status'], $response['message']);
+    }
+
+    public function showCommentsFromPost(Post $post) 
+    {
+        return response()->json($post->comments()->with('user')->latest()->get());
     }
 
     /**
@@ -99,5 +105,13 @@ class CommentController extends Controller
         } 
 
         return redirect()->back()->with($response['status'], $response['message']);
+    }
+
+    public function getAllComments()
+    {
+        $commentQuery = Comment::with('post', 'user')
+                                    ->where('approved', '=', '0');
+
+        return datatables()->of($commentQuery)->make();
     }
 }

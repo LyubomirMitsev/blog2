@@ -14,13 +14,17 @@ class Post extends Model
         'title', 'content', 'user_id', 'slug', 'published_at'
     ];
 
+    protected $dates = [
+        'created_at', 'updated_at', 'deleted_at'
+    ];
+
     /**
      * The event map for the model.
      *
      * @var array
      */
     protected $dispatchesEvents = [
-        'saved' => PostSavedEvent::class,
+        // 'saved' => PostSavedEvent::class,
     ];
 
     public function user()
@@ -46,5 +50,46 @@ class Post extends Model
     public function getRouteKeyName() 
     {
         return 'slug';
+    }
+
+    /**
+     * Get the post's time of publishing.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getPublishedAtAttribute($time)
+    {
+        if($time !== null) 
+        {
+            $value = date_create($time);
+            return date_format($value, 'd M Y, H:i:s');
+        } else {
+            return "In Draft";
+        }
+    }
+
+    /**
+     * Get the post's time of creation.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($time)
+    {
+        $value = date_create($time);
+        return date_format($value, 'd M Y, H:i:s');
+    }
+
+    /**
+     * Get the post's time of last modification.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getUpdatedAtAttribute($time)
+    {
+        $value = date_create($time);
+        return date_format($value, 'd M Y, H:i:s');
     }
 }

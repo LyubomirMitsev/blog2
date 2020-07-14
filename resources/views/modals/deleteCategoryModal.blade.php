@@ -1,6 +1,6 @@
 <!-- Delete Category Modal -->
 
-<div class="modal modal-fade" id="delete-category-{{ $category->id }}" aria-hidden="true">
+<div class="modal modal-fade" id="confirmDeleteCategoryModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,12 +8,12 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
             </div>
         
-            <form method="POST" class="form-horizontal" action="{{ route('category.destroy', $category->id) }}">
+            <form method="POST" class="form-horizontal" action="">
                 @csrf
                 @method('DELETE')
 
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the {{ $category->name }} category? Once deleted
+                    <p>Are you sure you want to delete this category? Once deleted
                     no posts can be associated with this category.</p>
                 </div>
             

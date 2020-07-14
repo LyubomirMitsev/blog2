@@ -5,49 +5,129 @@ Posts
 @endsection
 
 @section('content')
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             @include('partials.flash-messages')
             @include('partials.errors')
 
-            @if( $posts->count() > 0)
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Categories</th>
-                            <th>Comments</th>
-                            <th>Created at</th>
-                            <th>Last Modified</th>
-                            <th>Status</th>
-                            <th class="actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($posts as $post)
-                            <tr>
-                                <th><a href="{{ route('post.show', $post->slug) }}">{{ $post->title }}</a></th>
-                                <th>{{ $post->user->name }}</th>
-                                <th>{{ $post->categories->count() }}</th>
-                                <th><a href="{{ route('post.show', $post->slug) }}#comments">{{ $post->unapproved_comments->count() + $post->comments->count() }}</a></th>
-                                <th>{{ date('M j, Y - H:i:s', strtotime($post->created_at)) }}</th>
-                                <th>{{ date('M j, Y - H:i:s', strtotime($post->updated_at)) }}</th>
-                                <th>{{ $post->published_at != null ? "Published" : "In Draft" }}</th>
-                                <th class="actions">
-                                    <a class="btn btn-success" href="{{ route('post.edit', $post->slug) }}" type="button">Edit</a>
-                                    <button class="btn btn-danger" data-toggle="modal" data-target="#delete-post-{{ $post->slug }}">Delete</button>
-                                </th>
-                            </tr>
-                            @include('modals.deletePostModal')
-                        @endforeach
-                    </tbody>
-                </table>
+            <table class="table table-striped table-sm" id="all-posts">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Categories</th>
+                        <th>Comments</th>
+                        <th>Published at</th>
+                        <th>Created at</th>
+                        <th>Last Modified</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
 
-                {{ $posts->links() }}
-            @endif
+            @include('modals.deletePostModal')
         </div>
     </div>
 </div>
+
 @endsection
+
+@push('scripts')
+<script>
+
+    $('#all-posts').DataTable({
+        lengthMenu: [5, 10, 25],
+        pageLength: 10,
+        processing: true,
+        bFilter: true,
+        aaSorting: [0, 'asc'],
+        serverSide: true,
+        pagingType: 'simple_numbers',
+        ajax: {
+            url: '{{ route('get-all-posts') }}',
+            type: "GET",
+        },
+        columns: [
+            {data: 'id'},
+            {
+                data: 'title',
+                render: function (data, type, row, meta) {
+                    return handlePostUrl(row);
+                }    
+            },
+            {
+                data: 'user.name',
+                render: function (data, type, row, meta) {
+                    return row.user.name;
+                }
+            },
+            {
+                data: 'id',
+                render: function (data, type, row, meta) {
+                    return row.categories.length;
+                }
+            },
+            {
+                data: 'id',
+                render: function (data, type, row, meta) {
+                    let output = '<a href="/post/' + row.slug + '#comments">' + row.comments.length + '</a>';
+                    return output;
+                }
+            },
+            {data: 'published_at'},
+            {data: 'created_at'},
+            {data: 'updated_at'},
+            {
+                data: 'updated_at',
+                render: function (data, type, row, meta) {
+                    console.log(row);
+                    return handleEditButton(row);
+                },
+            },
+            {
+                data: 'id',
+                render: function (data, type, row, meta) {
+                    return handleDeleteButton(row);
+                },
+            }
+        ]
+    });
+
+    $('#all-posts').on('click', 'button.delete-post', function (event) {
+        event.preventDefault();
+        let id = $(this).data('id');
+
+        let modal = $('#confirmDeletePostModal');
+        modal.modal('show');
+
+        $('#confirmDeletePostModal form').attr('action', '/post/' + id);
+    });
+
+    function handlePostUrl(row)
+    {
+        let output = '<a href="/post/' + row.slug + '">' + row.title + '</a>';
+        return output;
+    }
+
+    function handleEditButton(row) 
+    {
+        let output = '<a class="btn btn-success" href="/post/' + row.slug + '/edit" type="button">Edit</a>';
+        return output;
+    }
+
+    function handleDeleteButton(row) 
+    {
+        let output = '<button data-id="' + row.slug + '" class="btn btn-danger delete-post">Delete</button>';
+        return output;
+    }
+
+</script>
+
+@endpush

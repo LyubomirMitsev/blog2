@@ -45,6 +45,7 @@
            width: 50px;
            height: 50px;
            float: left;
+           margin-right: 25px;
        }
 
        .comment-actions{
@@ -64,6 +65,11 @@
            width: 60%;
            display: inline-block;
        }
+
+       .grayout {
+            opacity: 0.6; /* Real browsers */
+            filter: alpha(opacity = 60); /* MSIE */
+        }
    </style>
 </head>
 <body>
@@ -181,6 +187,90 @@
             }
         });
       });
+</script>
+
+<script>
+    (function () {
+        let post = $('#post-title').attr('element');
+        $('.commentlist').load('/comment-list/' + post);
+
+        refresh();
+    })();
+
+    function refresh() {
+        setTimeout(function () {
+            let post = $('#post-title').attr('element');
+            $('.commentlist').load('/comment-list/' + post);
+
+            refresh();
+        }, 10000);
+    }
+</script>
+
+<script>
+    (function () {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+         });
+
+         $('#submit_comment_button').on('click', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: "{{ route('comment.store') }}",
+                method: 'POST',
+                dataType: 'json',
+                data: $('#commentform').serialize(),
+                success: function(data) {
+
+                    let date = new Date(data.created_at);
+                    let minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
+                    let month = new Array();
+                    month[0] = "January";
+                    month[1] = "February";
+                    month[2] = "March";
+                    month[3] = "April";
+                    month[4] = "May";
+                    month[5] = "June";
+                    month[6] = "July";
+                    month[7] = "August";
+                    month[8] = "September";
+                    month[9] = "October";
+                    month[10] = "November";
+                    month[11] = "December";
+
+                    $('<li class="comment even thread-even depth-1" ><article id="comment-' + data.id + '" class="comment grayout">'
+                        + '<header class="comment-meta comment-author vcard">'
+                        + '<img src="/uploads/avatars/' + data.user.avatar + '" class="author-image">'
+                        + '<cite><b class="fn">'
+                        + data.user.name
+                        + '</b> <p class="author-time">'
+                        + month[date.getMonth()] + ' ' + date.getDate() + 'th, ' +date.getFullYear() + '-' + date.getHours() + ":" + minutes 
+                        + '</p></cite>'
+                        + '<b>Has not been approved yet.</b>'
+                        + '</header>'
+                        + '<section class="comment-content comment">'
+                        + data.content
+                        + '</section>'
+                        + '</article></li>')
+                            .appendTo('ol.commentlist');
+
+                    $('textarea[name="content"]').val(null);
+                },
+                error: function() {
+                    
+                    $('<li class="comment even thread-even depth-1" ><article id="comment-' + data.id + '" class="comment grayout">'
+                        + '<section class="comment-content comment">'
+                        + 'Sorry! An error occured and we could not post your comment.'
+                        + '</section></article></li>')
+                            .appendTo('ol.commentlist');
+                }
+            })
+         });
+    })();
 </script>
 
 

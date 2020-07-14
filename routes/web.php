@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/comment-list/{post}', 'PostViewController@getComments');
+
 Route::get('/', 'PostViewController@welcome')->name('welcome');
 
 Route::get('/contact', 'ContactController@contact')->name('contact');
@@ -26,6 +28,8 @@ Route::get('/posts', 'PostSearchController@search')->name('post.search');
 Route::get('/posts/{post}', 'PostViewController@show')->name('post.view');
 
 Route::get('/posts/category/{category}', 'PostViewController@showPostsFromCategory')->name('post.from.category');
+
+Route::get('/comment/{post}', 'CommentController@showCommentsFromPost')->name('comment.show');
 
 Route::middleware('guest')->group( function () {
 
@@ -59,12 +63,18 @@ Route::middleware('auth')->group( function () {
 
         Route::resource('post', 'PostController');
 
+        Route::get('/all-posts', 'PostController@getAllPosts')->name('get-all-posts');
+
+        Route::get('/all-categories', 'CategoryController@getAllCategories')->name('get-all-categories');
+
+        Route::get('/all-comments', 'CommentController@getAllComments')->name('get-all-comments');
+
         Route::resource('category', 'CategoryController')->except([
             'show'
         ]);
 
         Route::resource('comment', 'CommentController')->except([
-            'create', 'store'
+            'create', 'store', 'show'
         ]);
 
         Route::post('ckeditor/image_upload', 'CKEditorController@upload')->name('upload');

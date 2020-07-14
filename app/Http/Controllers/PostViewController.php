@@ -83,4 +83,9 @@ class PostViewController extends Controller
 
         return view('post.index', ['posts' => $posts, 'category' => $category]);
     }
+
+    public function getComments(Post $post) 
+    {
+        return view('partials.commentlist', ['post' => $post]);
+    }
 }

@@ -20,8 +20,20 @@ class Comment extends Model
      * @var array
      */
     protected $dispatchesEvents = [
-        'created' => CommentCreatedEvent::class,
+        //'created' => CommentCreatedEvent::class,
     ];
+
+    /**
+     * Get the comment's time of creation.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($time)
+    {
+        $value = date_create($time);
+        return date_format($value, 'd M Y, H:i:s');
+    }
 
     public function user()
     {

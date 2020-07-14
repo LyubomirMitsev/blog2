@@ -24,4 +24,28 @@ class Category extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the category's's time of creation.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($time)
+    {
+        $value = date_create($time);
+        return date_format($value, 'd M Y, H:i:s');
+    }
+
+    /**
+     * Get the category's time of last modification.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getUpdatedAtAttribute($time)
+    {
+        $value = date_create($time);
+        return date_format($value, 'd M Y, H:i:s');
+    }
 }

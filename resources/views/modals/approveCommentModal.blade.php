@@ -1,6 +1,6 @@
 <!-- Approve Comment from show page Modal -->
 
-<div class="modal modal-fade" id="approve-comment-{{ $comment->id }}" aria-hidden="true">
+<div class="modal modal-fade" id="confirmApproveCommentModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
             </div>
         
-        <form method="POST" class="form-horizontal" action="{{ route('comment.update', $comment ?? ''->id) }}">
+        <form method="POST" class="form-horizontal" action="">
                 @csrf
                 @method('PATCH')
 

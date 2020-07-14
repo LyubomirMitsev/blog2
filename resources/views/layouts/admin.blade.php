@@ -13,7 +13,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>AdminLTE 3 | Starter</title>
-
+ 
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
   
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('css/admin-lte/adminlte.css') }}" rel="stylesheet">
@@ -21,9 +23,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link href="{{ asset('css/admin-lte/adminlte.min.css.map') }}" rel="stylesheet">
   <link href="{{ asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet">
   <link href="{{ asset('select2/dist/css/select2.min.css') }}" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
- 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
+  <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
   <style>
         #profile_image{
             height: 35px;
@@ -97,14 +101,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             cursor: pointer;
         }
 
-        #category_table{
-            display: none;
-        }
-
-        #post_table{
-            display: none;
-        }
-
         #view_comment{
             display: none;
         }
@@ -118,16 +114,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             text-align: center;
         }
 
-        td.actions button{
-            margin: 5px;
-        }
-
         #submitBtn, #submitPost{
             float: right;
-        }
-
-        #post_form button, a{
-            margin: 5px 0px;
         }
 
         span.close{
@@ -309,11 +297,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 <!-- ./wrapper -->
 
-
-</body>
-
-<!-- Scripts -->
-
+{{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/admin-lte/adminlte.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/admin-lte/adminlte.min.js.map') }}"></script>
+{{-- <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script> --}}
+
+@stack('scripts')
+
+</body>

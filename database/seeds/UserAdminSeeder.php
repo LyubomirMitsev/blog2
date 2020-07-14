@@ -31,7 +31,7 @@ class UserAdminSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Lyubomir Mitsev',
             'email' => 'lyubomir_mitzev@abv.bg',
-            'password' => Hash::make('celticguardian'),
+            'password' => Hash::make('12345678'),
         ]);
         
         User::find(1)->assignRole('admin');
